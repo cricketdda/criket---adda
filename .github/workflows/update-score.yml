@@ -1,1 +1,32 @@
+name: Update Live Cricket Score
 
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-score:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get cricket scores
+        env:
+          CRICKET_API_KEY: ${{ secrets.CRICKET_API_KEY }}
+        run: |
+          curl -s "https://api.cricapi.com/v1/currentMatches?apikey=${CRICKET_API_KEY}&offset=0" \
+            -o live-score.json
+
+      - name: Save updated score
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add live-score.json
+          git diff --cached --quiet || git commit -m "Update live cricket score"
+          git push
