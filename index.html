@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
@@ -149,5 +149,29 @@
     © 2026 ক্রিকেট আড্ডা | All Rights Reserved
   </footer>
 
-</body>
-</html>
+
+async function loadLiveScores() {
+  const scoreList = document.getElementById("score-list");
+
+  try {
+    const response = await fetch("live-score.json");
+
+    if (!response.ok) {
+      throw new Error("Score file not found");
+    }
+
+    const result = await response.json();
+
+    if (!result.data || result.data.length === 0) {
+      scoreList.innerHTML =
+        "<p>এই মুহূর্তে কোনো লাইভ ম্যাচ পাওয়া যায়নি।</p>";
+      return;
+    }
+
+    scoreList.innerHTML = "";
+
+    result.data.forEach(match => {
+      const card = document.createElement("div");
+     </script>
+      </body>    
+      </html>             
